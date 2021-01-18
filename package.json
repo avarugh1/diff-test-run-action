@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Github workflow with multiple jobs to get git diff, check for keywords, run applicable tests, and present the results",
   "author": "Anson Varughese",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "test": "echo \"Error: no test specified\" && exit 1"

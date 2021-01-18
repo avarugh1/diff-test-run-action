@@ -12,3 +12,5 @@ async function run(){
 
     core.setOutput('testStatus', 'test finished!');
 }
+
+run();

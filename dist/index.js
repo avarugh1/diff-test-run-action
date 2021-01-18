@@ -17,8 +17,10 @@ async function run(){
     const base = ctx.payload.before;
     const head = ctx.payload.after;
 
-    core.setOutput('test finished!');
+    core.setOutput('testStatus', 'test finished!');
 }
+
+run();
 
 /***/ }),
 
