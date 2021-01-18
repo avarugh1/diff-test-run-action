@@ -9,15 +9,29 @@ const core = __nccwpck_require__(186);
 const github = __nccwpck_require__(438);
 
 async function run(){
-    const inputs = {
-        token: core.getInput('repo-token', {required: true}),
+    try {
+        const inputs = {
+            token: core.getInput('repo-token', {required: true}),
+        }
+
+        const pr = github.context.payload.pull_request;
+        const [ base, head, prNum ] = [ pr.base, pr.head, pr.number ];
+        const message = 'Base is: ' + base.ref + '\nHead is: ' + head.ref;
+
+        const octokit = github.getOctokit(inputs.token);
+        const response = await octokit.issues.createComment({
+            ...github.context.repo,
+            issue_number: prNum,
+            body: message
+        });
+        
+        core.setOutput('baseBranchName', base.ref);
+        core.setOutput('headBranchName', head.ref);
+        core.setOutput('testStatus', 'test finished!');
+
+    } catch(error) {
+        core.setFailed(error.message);
     }
-
-    const ctx = github.context;
-    const base = ctx.payload.before;
-    const head = ctx.payload.after;
-
-    core.setOutput('testStatus', 'test finished!');
 }
 
 run();
