@@ -2,7 +2,7 @@ name: 'Run tests that have diff'
 description: 'Run tests that have changes to the as per diff. Present the results to the user'
 author: 'Anson Varughese'
 runs:
-  using: 'node14'
+  using: 'node12'
   main: 'index.js'
 inputs:
   repo-token:
