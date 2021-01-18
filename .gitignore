@@ -80,7 +80,7 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist # commenting this out since github action needs this in VCS
 
 # Gatsby files
 .cache/

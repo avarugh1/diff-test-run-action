@@ -1,0 +1,32 @@
+{
+  "name": "diff-test-run-action",
+  "version": "1.0.0",
+  "description": "Github workflow with multiple jobs to get git diff, check for keywords, run applicable tests, and present the results",
+  "author": "Anson Varughese",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avarugh1/diff-test-run-action.git"
+  },
+  "keywords": [
+    "Github",
+    "Actions",
+    "PullRequest"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avarugh1/diff-test-run-action/issues"
+  },
+  "homepage": "https://github.com/avarugh1/diff-test-run-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.27.0"
+  }
+}

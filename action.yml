@@ -1,0 +1,14 @@
+name: 'Run tests that have diff'
+description: 'Run tests that have changes to the as per diff. Present the results to the user'
+author: 'Anson Varughese'
+runs:
+  using: 'node14'
+  main: 'index.js'
+inputs:
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: 'true'
+    default: ${{ github.token }}
+outputs:
+  test-results:
+    description: 'Test results'
