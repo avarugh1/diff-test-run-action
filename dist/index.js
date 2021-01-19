@@ -18,7 +18,7 @@ function filterEligibleFiles(ele){
     return (isInDir && fileExt);
 }
 
-async function checkValidFiles(octokit, filesFiltered){
+async function checkValidFiles(octokit, prNum, filesFiltered){
     let message = '';
     Object.keys(filesFiltered).forEach(ele => {
         console.log(filesFiltered[ele].length + " is the length for " + ele);
@@ -68,7 +68,7 @@ async function run(){
             filesFiltered[ele.status].push(ele);
         });
 
-        checkValidFiles(octokit, filesFiltered);
+        checkValidFiles(octokit, prNum, filesFiltered);
         /*const response = await octokit.issues.createComment({
             ...github.context.repo,
             issue_number: prNum,
