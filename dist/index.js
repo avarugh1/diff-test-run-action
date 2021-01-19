@@ -85,7 +85,7 @@ async function parseResults(reportName){
                     path: fixture.path
                 });
             }*/
-            if(test.errs){
+            if(test.errs.length > 0){
                 errOnly.push({
                     name: test.name,
                     path: fixture.path
@@ -100,6 +100,7 @@ async function parseResults(reportName){
         core.setFailed('Tests have failed or were unstable!');
         message += 'Uh oh, some tests had errors or were unstable!\n\n'
         message += '| Path | Name |\n';
+        message += '| --------------- | --------------- |\n';
         let outputArr = errAndUnstable.concat(unstableOnly).concat(errOnly);
         outputArr.forEach(ele => message += ('| ' + ele.path + ' | ' + ele.name + ' | \n'));  
     }
