@@ -62,8 +62,9 @@ async function runTests(filesFiltered){
 
     execSync(`npm i testcafe`);
     execSync(`${testcafeCmd}`, { stdio: 'inherit' });
-
+    console.log('done with npm commands');
     parseResults('github-action-report.json');
+    console.log('done with parse commands');
 }
 
 function filterEligibleFiles(ele){
