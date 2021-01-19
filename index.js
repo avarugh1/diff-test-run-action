@@ -99,10 +99,18 @@ async function runTests(filesFiltered){
         // dirty workaround from https://github.com/DevExpress/testcafe-action/blob/master/index.js
         // due to index.js collision 
         let testcafeCmd = 'npx testcafe chrome:headless ' + testArr.join(' ') + 
-                            ' -u -q ' + '-r json:github-action-report.json';
+                            ' -u ' + '-r json:github-action-report.json';
 
         execSync(`npm i testcafe`);
-        execSync(`${testcafeCmd}`, { stdio: 'inherit' });
+        try{
+            execSync(`${testcafeCmd}`, { stdio: 'inherit' });
+        }catch(error) {
+            console.log("ERRORS:");
+            console.log(error.status);
+            console.log(error.message);
+            console.log(error.stderr.toString());
+            console.log(error.stdout.toString());
+        }
         console.log('done with npm commands');
         parseResults('github-action-report.json');
         console.log('done with report parse commands');
