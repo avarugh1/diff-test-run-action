@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+// File status options - 'added', 'removed', 'modified', 'renamed'
+
 async function run(){
     try {
         const inputs = {
@@ -12,11 +14,27 @@ async function run(){
         const message = 'Base is: ' + base.ref + '\nHead is: ' + head.ref;
 
         const octokit = github.getOctokit(inputs.token);
-        const response = await octokit.issues.createComment({
+        // listFiles not explicitly documented anywhere..but ok
+        const filesResponse = await octokit.pulls.listFiles({
+            ...github.context.repo,
+            pull_number: prNum,
+        })
+        console.log(filesResponse);
+
+        let filesFiltered = {
+            added: [],
+            removed: [],
+            modified: [],
+            renamed: []
+        };
+        filesResponse.forEach(ele => {
+            filesFiltered
+        });
+        /*const response = await octokit.issues.createComment({
             ...github.context.repo,
             issue_number: prNum,
             body: message
-        });
+        });*/
         
         core.setOutput('baseBranchName', base.ref);
         core.setOutput('headBranchName', head.ref);
