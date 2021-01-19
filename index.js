@@ -1,12 +1,12 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-
+const fs = require('fs');
 const { execSync } = require('child_process');
 
 
 // figure out ncc error with index.js collision
 /*const createTestCafe = require('testcafe');
-const fs = require('fs');
+
 
 function parseResults(reportName){
     let data = JSON.parse(fs.readFileSync(reportName));

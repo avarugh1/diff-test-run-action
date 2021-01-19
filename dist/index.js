@@ -7,13 +7,13 @@ require('./sourcemap-register.js');module.exports =
 
 const core = __nccwpck_require__(186);
 const github = __nccwpck_require__(438);
-
+const fs = __nccwpck_require__(747);
 const { execSync } = __nccwpck_require__(129);
 
 
 // figure out ncc error with index.js collision
 /*const createTestCafe = require('testcafe');
-const fs = require('fs');
+
 
 function parseResults(reportName){
     let data = JSON.parse(fs.readFileSync(reportName));
