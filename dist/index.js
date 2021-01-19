@@ -41,7 +41,7 @@ let octokit;
 
 async function parseResults(reportName){
     let data = JSON.parse(fs.readFileSync(reportName));
-    console.log(data);
+    console.log(JSON.stringify(data, null, 2));
 
     let errAndUnstable = [];
     let unstableOnly = [];
