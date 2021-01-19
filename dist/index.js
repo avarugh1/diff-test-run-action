@@ -21,6 +21,7 @@ function filterEligibleFiles(ele){
 async function checkValidFiles(octokit, filesFiltered){
     let message = '';
     Object.keys(filesFiltered).forEach(ele => {
+        console.log(filesFiltered[ele].length + " is the length for " + ele);
         filesFiltered[ele].filter(filterEligibleFiles);
         if(filesFiltered[ele].length > 0){
             message += (ele.charAt(0).toUpperCase() + ele.slice(1) + " Files are:\n");
