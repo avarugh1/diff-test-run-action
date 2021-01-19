@@ -47,44 +47,10 @@ async function parseResults(reportName){
     let unstableOnly = [];
     let errOnly = [];
 
-    /*data.fixtures.forEach(fixture => {
-        fixture.tests.forEach(test => {
-            if((test.errs.length > 0) && (test.unstable)){
-                errAndUnstable.push({
-                    name: test.name,
-                    path: fixture.path,
-                    errs: test.errs,
-                    unstable: true
-                });
-            }else if(test.errs.length > 0){
-                errOnly.push({
-                    name: test.name,
-                    path: fixture.path,
-                    errs: test.errs
-                });
-            }else if(test.unstable){
-                unstableOnly.push({
-                    name: test.name,
-                    path: fixture.path,
-                    unstable: true
-                });
-            }
-        });
-    });*/
-
     for(let i = 0; i < data.fixtures.length; i++){
-        console.log('fixure ' + i);
         const fixture = data.fixtures[i];
         for(let j = 0; j < fixture.tests.length; j++){
-            console.log('test + ' + j);
             const test = fixture.tests[j];
-            /*if(JSON.parse(test.errs).length > 0){
-                console.log('found err test: ' + test.name);
-                errOnly.push({
-                    name: test.name,
-                    path: fixture.path
-                });
-            }*/
             if(test.errs.length > 0){
                 errOnly.push({
                     name: test.name,
@@ -99,7 +65,7 @@ async function parseResults(reportName){
     }else{
         core.setFailed('Tests have failed or were unstable!');
         message += 'Uh oh, some tests had errors or were unstable!\n\n'
-        message += '| Path | Name |\n';
+        message += '| Path | Test Name |\n';
         message += '| --------------- | --------------- |\n';
         let outputArr = errAndUnstable.concat(unstableOnly).concat(errOnly);
         outputArr.forEach(ele => message += ('| ' + ele.path + ' | ' + ele.name + ' | \n'));  
@@ -121,13 +87,6 @@ async function runTests(filesFiltered){
     });
 
     if(testArr.length > 0) {
-        message += 'Hello! Friendly test checker here! Looks like some test file changes were made.\n'
-        message += 'I\'ll help you out by checking their stability! Good luck!\n\n'
-        message += 'File paths being checked are below:\n'
-        testArr.forEach(ele => message += ('1. ' + ele + '\n'));
-        message += '\n'
-    
-    
         // dirty workaround from https://github.com/DevExpress/testcafe-action/blob/master/index.js
         // due to index.js collision 
         let testcafeCmd = 'npx testcafe chrome:headless ' + testArr.join(' ') + 
@@ -136,11 +95,7 @@ async function runTests(filesFiltered){
         execSync(`npm i testcafe`);
         try{
             execSync(`${testcafeCmd}`, { stdio: 'inherit' });
-        }catch(error) {
-            console.log("ERRORS:");
-            console.log(error.status);
-            console.log(error.message);
-        }
+        }catch(error) {} // handle this
         console.log('done with npm commands');
         parseResults('github-action-report.json');
         console.log('done with report parse commands');
@@ -164,21 +119,17 @@ async function checkValidFiles(filesFiltered){
         filesFiltered[ele] = filesFiltered[ele].filter(filterEligibleFiles);
 
         // display files which will run to the user
-        /*if(filesFiltered[ele].length > 0){
+        if(filesFiltered[ele].length > 0){
+            message += 'Hello! Friendly test checker here! Looks like some test file changes were made.\n'
+            message += 'I\'ll help you out by checking their stability! Good luck!\n\n'
             message += (ele.charAt(0).toUpperCase() + ele.slice(1) + " Files are:\n");
 
             filesFiltered[ele].forEach(ele2 => {
                 message += (ele2.filename + '\n');
             });
             message += '\n';
-        }*/
+        }
     });
-
-    /*const response = await octokit.issues.createComment({
-        ...github.context.repo,
-        issue_number: prNum,
-        body: message
-    });*/
 }
 
 async function run(){
