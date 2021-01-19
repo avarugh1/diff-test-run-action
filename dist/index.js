@@ -77,7 +77,7 @@ async function parseResults(reportName){
         const fixture = data.fixtures[i];
         for(let j = 0; j < fixture.tests.length; j++){
             console.log('test + ' + j);
-            const test = fixture.tests[i];
+            const test = fixture.tests[j];
             /*if(JSON.parse(test.errs).length > 0){
                 console.log('found err test: ' + test.name);
                 errOnly.push({
