@@ -7,7 +7,6 @@ require('./sourcemap-register.js');module.exports =
 
 const core = __nccwpck_require__(186);
 const github = __nccwpck_require__(438);
-const exec = __nccwpck_require__(526);
 
 const { execSync } = __nccwpck_require__(129);
 
@@ -5915,14 +5914,6 @@ function wrappy (fn, cb) {
     return ret
   }
 }
-
-
-/***/ }),
-
-/***/ 526:
-/***/ ((module) => {
-
-module.exports = eval("require")("@actions/exec");
 
 
 /***/ }),
