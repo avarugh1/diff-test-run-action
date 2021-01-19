@@ -74,7 +74,7 @@ async function parseResults(reportName){
 
     for(let i = 0; i < data.fixtures.length; i++){
         console.log('fixure ' + i);
-        const fixture = data.fixture[i];
+        const fixture = data.fixtures[i];
         for(let j = 0; j < fixture.tests.length; j++){
             console.log('test + ' + j);
             const test = fixture.tests[i];
