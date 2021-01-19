@@ -47,7 +47,7 @@ async function parseResults(reportName){
     let unstableOnly = [];
     let errOnly = [];
 
-    data.fixtures.forEach(fixture => {
+    /*data.fixtures.forEach(fixture => {
         fixture.tests.forEach(test => {
             if((test.errs.length > 0) && (test.unstable)){
                 errAndUnstable.push({
@@ -70,11 +70,29 @@ async function parseResults(reportName){
                 });
             }
         });
-    });
+    });*/
 
-    if(errAndUnstable.length + unstableOnly.length + errOnly.length){
+    for(let i = 0; i < data.fixtures.length; i++){
+        console.log('fixure ' + i);
+        const fixture = data.fixture[i];
+        for(let j = 0; j < fixture.tests.length; j++){
+            console.log('test + ' + j);
+            const test = fixture.tests[i];
+            if(test.errs.length > 0){
+                console.log('found err test: ' + test.name);
+                errOnly.push({
+                    name: test.name,
+                    path: fixture.path,
+                    errs: test.errs
+                });
+            }
+        }
+    }
+
+    if((errAndUnstable.length + unstableOnly.length + errOnly.length) === 0){
         message += 'Great news: no tests were unstable or had errors!'
     }else{
+        core.setFailed('Tests have failed or were unstable!');
         message += 'Uh oh, some tests had errors or were unstable!\n\n'
         message += '| Path | Name |\n';
         let outputArr = errAndUnstable.concat(unstableOnly).concat(errOnly);
