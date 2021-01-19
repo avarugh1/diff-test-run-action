@@ -82,8 +82,7 @@ async function parseResults(reportName){
                 console.log('found err test: ' + test.name);
                 errOnly.push({
                     name: test.name,
-                    path: fixture.path,
-                    errs: test.errs
+                    path: fixture.path
                 });
             }
         }
