@@ -6,8 +6,8 @@ function filterEligibleFiles(ele){
     const extension = '.js';
     const fileContainsText = 'test('; // think a little bit more about this
 
-    const isInDir = ele[filename].includes(inDirectory);
-    const fileExt = (ele[filename].slice(-3) === extension);
+    const isInDir = ele.filename.includes(inDirectory);
+    const fileExt = (ele.filename.slice(-3) === extension);
     return (isInDir && fileExt);
 }
 
@@ -20,7 +20,7 @@ async function checkValidFiles(octokit, filesFiltered){
             message += (ele.charAt(0).toUpperCase() + ele.slice(1) + " Files are:\n");
 
             filesFiltered[ele].forEach(ele2 => {
-                message += (ele2[filename] + '\n');
+                message += (ele2.filename + '\n');
             });
             message += '\n';
         }
