@@ -1,5 +1,64 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const exec = require('@actions/exec');
+
+const { execSync } = require('child_process');
+
+
+// figure out ncc error with index.js collision
+/*const createTestCafe = require('testcafe');
+const fs = require('fs');
+
+function parseResults(reportName){
+    let data = JSON.parse(fs.readFileSync(reportName));
+    console.log(data);
+}
+
+async function runTests(filesFiltered){
+    let testArr = [];
+    Object.values(filesFiltered).forEach(ele => {
+        ele.forEach(ele2 => {
+            testArr.push(ele2.filename);
+        })
+    });
+    const testCafe = await createTestCafe('localhost', 1337, 1338);
+    try {
+        const runner = testCafe.createRunner();
+
+        await runner
+            .src(testArr)
+            .browsers('chrome:headless')
+            .reporter('json', 'github-action-report.json')
+            .run({ quarantineMode: true });
+    }
+    finally {
+        await testCafe.close();
+    }
+}*/
+
+function parseResults(reportName){
+    let data = JSON.parse(fs.readFileSync(reportName));
+    console.log(data);
+}
+
+async function runTests(filesFiltered){
+    let testArr = [];
+    Object.values(filesFiltered).forEach(ele => {
+        ele.forEach(ele2 => {
+            testArr.push(ele2.filename);
+        })
+    });
+    
+    // dirty workaround from https://github.com/DevExpress/testcafe-action/blob/master/index.js
+    // due to index.js collision 
+    let testcafeCmd = 'npx testcafe chrome:headless ' + testArr.join(' ') + 
+                        ' -q ' + '-r json:github-action-report.json';
+
+    execSync(`npm i testcafe`);
+    execSync(`${testcafeCmd}`, { stdio: 'inherit' });
+
+    parseResults('github-action-report.json');
+}
 
 function filterEligibleFiles(ele){
     const inDirectory = 'tests/';
@@ -13,9 +72,13 @@ function filterEligibleFiles(ele){
 
 async function checkValidFiles(octokit, prNum, filesFiltered){
     let message = '';
+
+    // for all the original added, removed, modified, renamed arrays
     Object.keys(filesFiltered).forEach(ele => {
-        console.log(filesFiltered[ele].length + " is the length for " + ele);
+        // Only use the eligible test files based on our file filter criteria
         filesFiltered[ele] = filesFiltered[ele].filter(filterEligibleFiles);
+
+        // display files which will run to the user
         if(filesFiltered[ele].length > 0){
             message += (ele.charAt(0).toUpperCase() + ele.slice(1) + " Files are:\n");
 
@@ -26,13 +89,12 @@ async function checkValidFiles(octokit, prNum, filesFiltered){
         }
     });
 
-    const response = await octokit.issues.createComment({
+    /*const response = await octokit.issues.createComment({
         ...github.context.repo,
         issue_number: prNum,
         body: message
-    });
+    });*/
 }
-
 
 async function run(){
     try {
@@ -62,6 +124,7 @@ async function run(){
         });
 
         checkValidFiles(octokit, prNum, filesFiltered);
+        runTests(filesFiltered);
         /*const response = await octokit.issues.createComment({
             ...github.context.repo,
             issue_number: prNum,
