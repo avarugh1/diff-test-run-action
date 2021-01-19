@@ -1,7 +1,37 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-// File status options - 'added', 'removed', 'modified', 'renamed'
+function filterEligibleFiles(ele){
+    const inDirectory = 'tests/';
+    const extension = '.js';
+    const fileContainsText = 'test('; // think a little bit more about this
+
+    const isInDir = ele[filename].includes(inDirectory);
+    const fileExt = (ele[filename].slice(-3) === extension);
+    return (isInDir && fileExt);
+}
+
+async function checkValidFiles(octokit, filesFiltered){
+    let message = '';
+    Object.keys(filesFiltered).forEach(ele => {
+        filesFiltered[ele].filter(filterEligibleFiles);
+        if(filesFiltered[ele].length > 0){
+            message += (ele.charAt(0).toUpperCase() + ele.slice(1) + " Files are:\n");
+
+            filesFiltered[ele].forEach(ele2 => {
+                message += (ele2[filename] + '\n');
+            });
+            message += '\n';
+        }
+    });
+
+    const response = await octokit.issues.createComment({
+        ...github.context.repo,
+        issue_number: prNum,
+        body: message
+    });
+}
+
 
 async function run(){
     try {
@@ -14,22 +44,23 @@ async function run(){
         const message = 'Base is: ' + base.ref + '\nHead is: ' + head.ref;
 
         const octokit = github.getOctokit(inputs.token);
-        // listFiles not explicitly documented anywhere..but ok
         const filesResponse = await octokit.pulls.listFiles({
             ...github.context.repo,
             pull_number: prNum,
         })
-        console.log(filesResponse);
 
+        // File status options - 'added', 'removed', 'modified', 'renamed'
         let filesFiltered = {
             added: [],
             removed: [],
             modified: [],
             renamed: []
         };
-        filesResponse.forEach(ele => {
-            filesFiltered
+        filesResponse.data.forEach(ele => {
+            filesFiltered[ele.status].push(ele);
         });
+
+        checkValidFiles(octokit, filesFiltered);
         /*const response = await octokit.issues.createComment({
             ...github.context.repo,
             issue_number: prNum,

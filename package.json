@@ -24,7 +24,8 @@
   "homepage": "https://github.com/avarugh1/diff-test-run-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
+    "@actions/github": "^4.0.0",
+    "testcafe": "^1.10.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0"
