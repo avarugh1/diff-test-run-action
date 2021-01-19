@@ -37,6 +37,7 @@ async function runTests(filesFiltered){
 
 let message = '';
 let prNum = 0;
+let octokit;
 
 async function parseResults(reportName){
     let data = JSON.parse(fs.readFileSync(reportName));
@@ -132,7 +133,7 @@ function filterEligibleFiles(ele){
     return (isInDir && fileExt);
 }
 
-async function checkValidFiles(octokit, filesFiltered){
+async function checkValidFiles(filesFiltered){
     // for all the original added, removed, modified, renamed arrays
     Object.keys(filesFiltered).forEach(ele => {
         // Only use the eligible test files based on our file filter criteria
@@ -167,7 +168,7 @@ async function run(){
         const [ base, head ] = [ pr.base, pr.head ];
         const message = 'Base is: ' + base.ref + '\nHead is: ' + head.ref;
 
-        const octokit = github.getOctokit(inputs.token);
+        octokit = github.getOctokit(inputs.token);
         const filesResponse = await octokit.pulls.listFiles({
             ...github.context.repo,
             pull_number: prNum,
@@ -184,7 +185,7 @@ async function run(){
             filesFiltered[ele.status].push(ele);
         });
 
-        checkValidFiles(octokit, filesFiltered);
+        checkValidFiles(filesFiltered);
         runTests(filesFiltered);
         /*const response = await octokit.issues.createComment({
             ...github.context.repo,
